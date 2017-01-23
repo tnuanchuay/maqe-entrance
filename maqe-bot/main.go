@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"os"
 	"strconv"
+	"strings"
 )
 
 type position struct {
@@ -25,22 +26,23 @@ func main(){
 	input = os.Args[len(os.Args) - 1]
 
 	for len(input) != 0{
-		fString := input[0]
+		firstChar := input[0]
 
-		if fString == R {
-			turn(&deg, R)
-		}else if fString == L {
-			turn(&deg, L)
-		}else if fString == W{
+		if firstChar == W{
 			r := regexp.MustCompile("[0-9]+")
 			s := r.FindStringSubmatch(input)
 			if len(s) != 0{
 				step, _ := strconv.Atoi(s[0])
 				walk(&pos, deg, step)
 			}
-		}
+			index := strings.Index(input, s[0])
 
-		input = input[1:]
+			input = input[index+len(s[0]):]
+		}else{
+			turn(&deg, firstChar)
+			input = input[1:]
+		}
+		fmt.Println(input)
 	}
 
 	fmt.Println("X:", pos.x, "Y:", pos.y, "Direction:", degToString(deg))
